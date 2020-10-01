@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "qltuippj_easyfarm_db",
+    "password": "Hemitha#168",
+    "database": "qltuippj_easyfarm",
+    "host": "localhost",
+    "dialect": "mysql"
+  },
+  "test": {
+    "username": "root",
+    "password": null,
+    "database": "database_test",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "qltuippj_easyfarm_db",
+    "password": "Hemitha#168",
+    "database": "qltuippj_easyfarm",
+    "host": "localhost",
+    "dialect": "mysql"
+  }
+}
