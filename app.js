@@ -41,4 +41,9 @@ app.use(function (err, req, res, next) {
 
 var http = require('http');
 var server = http.createServer(app);
-server.listen();
+if (process.env.name) {
+  server.listen();
+} else {
+  server.listen(3000);
+}
+

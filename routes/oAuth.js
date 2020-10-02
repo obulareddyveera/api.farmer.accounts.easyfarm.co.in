@@ -9,7 +9,7 @@ router.get("/", (req, res) => {
   const oauth2Client = new google.auth.OAuth2(
     CONFIG.oauth2Credentials.client_id,
     CONFIG.oauth2Credentials.client_secret,
-    CONFIG.oauth2Credentials.redirect_uris[0]
+    `http://${req.headers.host}/auth_callback`
   );
   const loginLink = oauth2Client.generateAuthUrl({
     access_type: "offline",
@@ -23,7 +23,7 @@ router.get("/auth_callback", async (req, res) => {
   const oauth2Client = new google.auth.OAuth2(
     CONFIG.oauth2Credentials.client_id,
     CONFIG.oauth2Credentials.client_secret,
-    CONFIG.oauth2Credentials.redirect_uris[0]
+    `http://${req.headers.host}/auth_callback`
   );
   const { query } = req;
   if (query.error) {
