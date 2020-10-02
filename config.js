@@ -1,5 +1,5 @@
 const port = 3000;
-const baseURL = `http://api.farmer.accounts.easyfarm.co.in/`;
+const baseURL = `http://api.farmer.accounts.easyfarm.co.in`;
 module.exports = {
   // The secret for the encryption of the jsonwebtoken
   JWTsecret: "mysecret",
