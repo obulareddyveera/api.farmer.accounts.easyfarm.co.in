@@ -41,9 +41,12 @@ app.use(function (err, req, res, next) {
 
 var http = require('http');
 var server = http.createServer(app);
+console.log('--== process.env.name ', process.env.name);
 if (process.env.name) {
+  console.log('--== APP is running on UnKnown PORT !!!! ==--');
   server.listen();
 } else {
+  console.log('--== APP is running on 3000 PORT !!!! ==--');
   server.listen(3000);
 }
 
