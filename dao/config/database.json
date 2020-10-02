@@ -1,7 +1,7 @@
 {
   "development": {
     "username": "qltuippj_easyfarm_db",
-    "password": "Hemitha#168",
+    "password": "Hemitha@168",
     "database": "qltuippj_easyfarm",
     "host": "localhost",
     "dialect": "mysql"
