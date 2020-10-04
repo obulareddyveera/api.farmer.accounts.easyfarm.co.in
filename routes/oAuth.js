@@ -54,7 +54,6 @@ router.get("/auth_callback", async (req, res) => {
     if (err) return res.json({ error: err });
     const { access_token } = tokens;
     const googleProfileUrl = `https://www.googleapis.com/oauth2/v2/userinfo?alt=json&access_token=${access_token}`;
-    // const googleProfileUrl = `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${access_token}`;
     https
       .get(googleProfileUrl, (resp) => {
         let data = "";
@@ -67,7 +66,7 @@ router.get("/auth_callback", async (req, res) => {
             currentUser,
           } = await usersController.setGoogleOAuth2User(JSON.parse(data));
           if (err) return res.json({ error: err });
-          console.log('--== currentUser ', currentUser);
+          console.log('--== Request HostName ', req.secure, req.hostname, req.originalUrl);
 
           return res.json({
             jwt: jwt.sign(
