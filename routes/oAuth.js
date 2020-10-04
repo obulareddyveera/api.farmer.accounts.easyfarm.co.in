@@ -46,7 +46,6 @@ router.get("/", (req, res) => {
 });
 
 router.get("/auth_callback", async (req, res) => {
-  const referer  = req.query.referer;
   const oauth2Client = new google.auth.OAuth2(
     CONFIG.oauth2Credentials.client_id,
     CONFIG.oauth2Credentials.client_secret,
@@ -84,7 +83,7 @@ router.get("/auth_callback", async (req, res) => {
               { ...tokens, profile: JSON.parse(data) },
               CONFIG.JWTsecret
             ),
-            referer,
+            referer: query,
           });
         });
       })
