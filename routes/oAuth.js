@@ -4,7 +4,6 @@ const router = express.Router();
 const google = require("googleapis").google;
 const jwt = require("jsonwebtoken");
 
-const utils = require("./utils");
 const CONFIG = require("./../config");
 const usersController = require("../dao/controllers/users");
 
@@ -28,11 +27,15 @@ router.get("/auth/*", (req, res, next) => {
 });
 
 router.get("/", (req, res) => {
-  const referer = req.get('Referer');
+  const referer = req.get("referer");
+  console.log(
+    "--== Redirect URI ",
+    `http://${req.headers.host}/auth_callback/?referer=${referer}`
+  );
   const oauth2Client = new google.auth.OAuth2(
     CONFIG.oauth2Credentials.client_id,
     CONFIG.oauth2Credentials.client_secret,
-    `http://${utils.getHostNameUri(req)}/auth_callback?referer=${referer}`
+    `http://${req.headers.host}/auth_callback/?referer=${referer}`
   );
   const loginLink = oauth2Client.generateAuthUrl({
     access_type: "offline",
@@ -46,10 +49,11 @@ router.get("/", (req, res) => {
 });
 
 router.get("/auth_callback", async (req, res) => {
+  const referer = req.get("referer");
   const oauth2Client = new google.auth.OAuth2(
     CONFIG.oauth2Credentials.client_id,
     CONFIG.oauth2Credentials.client_secret,
-    `http://${utils.getHostNameUri(req)}/auth_callback`
+    `http://${req.headers.host}/auth_callback/?referer=${referer}`
   );
   const { query } = req;
   if (query.error) {
@@ -77,14 +81,18 @@ router.get("/auth_callback", async (req, res) => {
             req.hostname,
             req.originalUrl
           );
-
-          return res.json({
-            jwt: jwt.sign(
-              { ...tokens, profile: JSON.parse(data) },
-              CONFIG.JWTsecret
-            ),
-            referer: query,
-          });
+          const jwtToken = jwt.sign(
+            { ...tokens, profile: JSON.parse(data) },
+            CONFIG.JWTsecret
+          );
+          // return res.json({
+          //   jwt: jwt.sign(
+          //     { ...tokens, profile: JSON.parse(data) },
+          //     CONFIG.JWTsecret
+          //   ),
+          //   referer: query,
+          // });
+          return res.redirect(query.referer + `auth_callback?token:${jwtToken}`);
         });
       })
       .on("error", (err) => {
