@@ -40,6 +40,7 @@ router.get("/", (req, res) => {
 
   return res.json({
     loginLink: loginLink,
+    referer: req.get('Referer'),
     hostname: req.hostname,
   });
 });
@@ -83,6 +84,7 @@ router.get("/auth_callback", async (req, res) => {
               CONFIG.JWTsecret
             ),
             hostname: req.hostname,
+            referer: req.get('Referer'),
           });
         });
       })
