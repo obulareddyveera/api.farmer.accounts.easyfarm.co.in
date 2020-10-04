@@ -2,7 +2,7 @@ const models = require("../models");
 
 const usersController = {
   validateEmail: async (emailId, pwd) => {
-    const response = await models.Users.findAll({
+    const response = await models.users.findAll({
       attributes: [[sequelize.fn("COUNT", sequelize.col("email")), "total"]],
       where: {
         email: emailId,
@@ -11,7 +11,7 @@ const usersController = {
     return response;
   },
   checkDuplicateEmail: async (emailId) => {
-    const response = await models.Users.findAll({
+    const response = await models.users.findAll({
       attributes: [[sequelize.fn("COUNT", sequelize.col("email")), "total"]],
       where: {
         email: emailId,
@@ -20,10 +20,10 @@ const usersController = {
     return response;
   },
   fetchAllUsers: async () => {
-    return await models.Users.findAll({});
+    return await models.users.findAll({});
   },
   setGoogleOAuth2User: async (userProfile) => {
-    const [users, created] = await models.Users.findOrCreate({
+    const [users, created] = await models.users.findOrCreate({
       where: { gId: userProfile.id },
       defaults: {
         name: userProfile.name,
