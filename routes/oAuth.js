@@ -28,10 +28,11 @@ router.get("/auth/*", (req, res, next) => {
 });
 
 router.get("/", (req, res) => {
+  const referer = req.get('Referer');
   const oauth2Client = new google.auth.OAuth2(
     CONFIG.oauth2Credentials.client_id,
     CONFIG.oauth2Credentials.client_secret,
-    `http://${utils.getHostNameUri(req)}/auth_callback`
+    `http://${utils.getHostNameUri(req)}/auth_callback?referer=${referer}`
   );
   const loginLink = oauth2Client.generateAuthUrl({
     access_type: "offline",
@@ -40,12 +41,12 @@ router.get("/", (req, res) => {
 
   return res.json({
     loginLink: loginLink,
-    referer: req.get('Referer'),
-    hostname: req.hostname,
+    referer,
   });
 });
 
 router.get("/auth_callback", async (req, res) => {
+  const referer  = req.query.referer;
   const oauth2Client = new google.auth.OAuth2(
     CONFIG.oauth2Credentials.client_id,
     CONFIG.oauth2Credentials.client_secret,
@@ -83,8 +84,7 @@ router.get("/auth_callback", async (req, res) => {
               { ...tokens, profile: JSON.parse(data) },
               CONFIG.JWTsecret
             ),
-            hostname: req.hostname,
-            referer: req.get('Referer'),
+            referer,
           });
         });
       })
