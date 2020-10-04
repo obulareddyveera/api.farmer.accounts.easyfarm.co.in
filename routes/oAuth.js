@@ -38,7 +38,11 @@ router.get("/", (req, res) => {
     scope: CONFIG.oauth2Credentials.scopes,
   });
 
-  return res.json({ loginLink: loginLink });
+  return res.json({
+    loginLink: loginLink,
+    referrer: req.getHeader("referer"),
+    hostname: req.hostname,
+  });
 });
 
 router.get("/auth_callback", async (req, res) => {
@@ -67,14 +71,19 @@ router.get("/auth_callback", async (req, res) => {
             currentUser,
           } = await usersController.setGoogleOAuth2User(JSON.parse(data));
           if (err) return res.json({ error: err });
-          console.log('--== Request HostName ', req.secure, req.hostname, req.originalUrl);
+          console.log(
+            "--== Request HostName ",
+            req.secure,
+            req.hostname,
+            req.originalUrl
+          );
 
           return res.json({
             jwt: jwt.sign(
               { ...tokens, profile: JSON.parse(data) },
               CONFIG.JWTsecret
             ),
-            hostname: req.hostname
+            hostname: req.hostname,
           });
         });
       })
