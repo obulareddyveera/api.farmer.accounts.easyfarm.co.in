@@ -24,6 +24,7 @@ var allowedOrigins = [
   "http://localhost:5000",
   "http://localhost:3000",
   "http://farmer.accounts.easyfarm.co.in/",
+  "http://farmer.accounts.easyfarm.co.in"
 ];
 app.use(
   cors({
