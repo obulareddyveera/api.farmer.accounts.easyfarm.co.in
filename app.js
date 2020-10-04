@@ -22,7 +22,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 require("./dao/config/connection");
 app.use("/", oAuthRouter);
-app.use("/users", usersRouter);
+app.use("/auth/users", usersRouter);
 
 app.use(function (req, res, next) {
   next(createError(404));

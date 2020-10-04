@@ -14,11 +14,13 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Users.init({
-    firstName: DataTypes.STRING,
-    lastName: DataTypes.STRING,
+    gId: DataTypes.STRING,
     email: DataTypes.STRING,
-    googleId: DataTypes.STRING,
-    json: DataTypes.TEXT
+    name: DataTypes.STRING,
+    picture: DataTypes.STRING,
+    givenName: DataTypes.STRING,
+    familyName: DataTypes.STRING,
+    verifiedEmail: DataTypes.BOOLEAN,
   }, {
     sequelize,
     modelName: 'Users',

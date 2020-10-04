@@ -3,7 +3,28 @@ const https = require("https");
 const router = express.Router();
 const google = require("googleapis").google;
 const jwt = require("jsonwebtoken");
+
 const CONFIG = require("./../config");
+const usersController = require("../dao/controllers/users");
+
+router.get("/auth/*", (req, res, next) => {
+  const token = req.headers["x-access-token"];
+  if (!token)
+    return res.status(401).send({ auth: false, message: "No token provided." });
+  jwt.verify(token, CONFIG.JWTsecret, function (err, decoded) {
+    if (err)
+      return res
+        .status(500)
+        .send({ auth: false, message: "Failed to authenticate token." });
+
+    const { expiry_date, profile } = decoded;
+    if (new Date().getTime() > expiry_date) {
+      res.status(401).send({ auth: false, message: "Session Expired" });
+    }
+    req.currentUser = decoded;
+    next();
+  });
+});
 
 router.get("/", (req, res) => {
   const oauth2Client = new google.auth.OAuth2(
@@ -32,20 +53,27 @@ router.get("/auth_callback", async (req, res) => {
     const { err, tokens } = await oauth2Client.getToken(query.code);
     if (err) return res.json({ error: err });
     const { access_token } = tokens;
-    const googleProfileUrl = `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${access_token}`;
+    const googleProfileUrl = `https://www.googleapis.com/oauth2/v2/userinfo?alt=json&access_token=${access_token}`;
+    // const googleProfileUrl = `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${access_token}`;
     https
       .get(googleProfileUrl, (resp) => {
         let data = "";
         resp.on("data", (chunk) => {
           data += chunk;
         });
-        resp.on("end", () => {
-          console.log(JSON.parse(data));
+        resp.on("end", async () => {
+          const {
+            err,
+            currentUser,
+          } = await usersController.setGoogleOAuth2User(JSON.parse(data));
+          if (err) return res.json({ error: err });
+          console.log('--== currentUser ', currentUser);
 
           return res.json({
-            tokens,
-            profile: JSON.parse(data),
-            jwt: jwt.sign(tokens, CONFIG.JWTsecret),
+            jwt: jwt.sign(
+              { ...tokens, profile: JSON.parse(data) },
+              CONFIG.JWTsecret
+            ),
           });
         });
       })
