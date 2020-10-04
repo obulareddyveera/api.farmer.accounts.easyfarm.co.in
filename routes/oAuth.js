@@ -74,6 +74,7 @@ router.get("/auth_callback", async (req, res) => {
               { ...tokens, profile: JSON.parse(data) },
               CONFIG.JWTsecret
             ),
+            hostname: req.hostname
           });
         });
       })
