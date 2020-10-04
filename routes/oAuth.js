@@ -28,10 +28,6 @@ router.get("/auth/*", (req, res, next) => {
 
 router.get("/", (req, res) => {
   const referer = req.get("referer");
-  console.log(
-    "--== Redirect URI ",
-    `http://${req.headers.host}/auth_callback/?referer=${referer}`
-  );
   const oauth2Client = new google.auth.OAuth2(
     CONFIG.oauth2Credentials.client_id,
     CONFIG.oauth2Credentials.client_secret,
@@ -49,13 +45,13 @@ router.get("/", (req, res) => {
 });
 
 router.get("/auth_callback", async (req, res) => {
-  const referer = req.get("referer");
+  const { query } = req;
+  console.log('--=== I am ur referer ', query);
   const oauth2Client = new google.auth.OAuth2(
     CONFIG.oauth2Credentials.client_id,
     CONFIG.oauth2Credentials.client_secret,
-    `http://${req.headers.host}/auth_callback/?referer=${referer}`
+    `http://${req.headers.host}/auth_callback/?referer=${query.referer}`
   );
-  const { query } = req;
   if (query.error) {
     return res.json({ error: query.error });
   } else {
