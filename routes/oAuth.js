@@ -40,7 +40,6 @@ router.get("/", (req, res) => {
 
   return res.json({
     loginLink: loginLink,
-    referrer: req.getHeader("referer"),
     hostname: req.hostname,
   });
 });
