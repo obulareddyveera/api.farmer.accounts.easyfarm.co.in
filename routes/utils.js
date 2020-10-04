@@ -4,6 +4,6 @@ module.exports = {
       return "localhost:5000";
     }
 
-    return req.hostName;
+    return !req.hostName ? "localhost:5000" : req.hostName;
   },
 };
