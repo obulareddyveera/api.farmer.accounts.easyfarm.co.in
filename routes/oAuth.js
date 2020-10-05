@@ -88,7 +88,7 @@ router.get("/auth_callback", async (req, res) => {
           //   ),
           //   referer: query,
           // });
-          return res.redirect(query.referer + `auth_callback?token=${jwtToken}`);
+          return res.redirect(query.referer + `auth_callback.html?token=${jwtToken}`);
         });
       })
       .on("error", (err) => {
