@@ -21,10 +21,12 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 var allowedOrigins = [
-  "http://localhost:5000",
   "http://localhost:3000",
+  "https://localhost:3000",
   "http://farmer.accounts.easyfarm.co.in/",
-  "http://farmer.accounts.easyfarm.co.in"
+  "https://farmer.accounts.easyfarm.co.in/",
+  "http://farmer.accounts.easyfarm.co.in",
+  "https://farmer.accounts.easyfarm.co.in"
 ];
 app.use(
   cors({
